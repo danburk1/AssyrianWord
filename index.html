@@ -1,96 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Assyrian Language Assessment</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssyrianWord</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Start Screen -->
-<div id="start-screen">
-  <h1>Assyrian Language Assessment</h1>
-  <p>This assessment will test your ability to translate Assyrian phrases into English. You will have 10 questions to complete.</p>
-  
-  <div class="info-box">
-    <h3>Assessment Rules</h3>
-    <ul>
-      <li>You have 3 attempts per question</li>
-      <li>The assessment will enter fullscreen mode</li>
-      <li>Tab changes will be logged</li>
-      <li>Complete all 10 questions to see your results</li>
-    </ul>
-  </div>
-  
-  <button class="start-btn" id="start-btn">Begin Assessment</button>
-</div>
-
-<!-- Assessment Screen -->
-<div id="assessment-screen">
-  <div class="assessment-header">
-    <h2>Assyrian Language Assessment</h2>
-    <div class="header-right">
-      <div class="timer" id="timer">00:00</div>
-      <div class="warning-indicator" id="warning-indicator">⚠️ Tab Change Detected</div>
-    </div>
-  </div>
-  
-  <div class="progress-container">
-    <div class="progress-bar" id="progress-bar"></div>
-  </div>
-  
-  <div class="assessment-content">
-    <div class="question-container">
-      <div class="question-number" id="question-number">Question 1 of 10</div>
-      <div class="assyrian-text" id="assyrian-text">Loading...</div>
-      <div class="question-label">English Translation:</div>
-      <input type="text" class="answer-input" id="answer-input" autocomplete="off" placeholder="Type your answer here..." />
-      <div class="button-group">
-        <button class="submit-btn" id="submit-btn">Submit Answer</button>
-        <button class="next-btn" id="next-btn">Next Question</button>
-      </div>
-      <div class="feedback" id="feedback"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Results Screen -->
-<div id="results-screen">
-  <div class="results-box">
-    <h2>Assessment Complete</h2>
-    <div class="score-display" id="score-display">0%</div>
-    <div class="score-label">Final Score</div>
-    
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-label">Correct Answers</div>
-        <div class="stat-value" id="correct-count">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Total Questions</div>
-        <div class="stat-value">10</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Time Elapsed</div>
-        <div class="stat-value" id="time-elapsed">00:00</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Tab Changes</div>
-        <div class="stat-value" id="tab-changes">0</div>
-      </div>
-    </div>
-    
-    <div class="warning-log" id="warning-log" style="display: none;">
-      <h4>⚠️ Academic Integrity Notice</h4>
-      <p>Tab changes were detected during this assessment. Your instructor has been notified.</p>
+    <div id="dashboard-view">
+        <div class="dashboard-header">
+            <div style="font-size: 22px; color: #5f6368;">
+                Assyrian<span style="font-weight:600; color: var(--primary)">Word</span>
+            </div>
+        </div>
+        
+        <h3 style="color:#202124; font-size: 16px; margin-bottom:15px;">Start a new document</h3>
+        
+        <div class="doc-grid" id="doc-grid">
+            <div class="new-doc-card" onclick="createNewDoc()">
+                <div style="text-align: center; color: var(--primary);">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    <div style="margin-top: 8px; font-weight: 500;">Blank</div>
+                </div>
+            </div>
+            </div>
     </div>
 
-    <div class="answer-review" id="answer-review"></div>
-  </div>
-</div>
+    <div id="editor-view">
+        <div class="toolbar">
+            <button class="tool-btn" onclick="showDashboard()" data-tooltip="Back to Home">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </button>
+            
+            <div class="separator"></div>
 
-<script src="script.js"></script>
+            <input type="text" id="doc-title" class="doc-title-input" value="Untitled Document" oninput="updateTitle()">
+            <div id="save-status" class="save-status">Saved</div>
 
+            <div class="separator"></div>
+
+            <button class="tool-btn" onclick="window.print()" data-tooltip="Print (PDF)">
+                <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+            </button>
+
+            <button class="tool-btn" id="typing-toggle" onclick="togglePhysicalKeyboard()" data-tooltip="Toggle Assyrian Keyboard">
+                <svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
+            </button>
+
+            <button class="tool-btn active" id="osk-toggle" onclick="toggleOSK()" data-tooltip="Show/Hide On-Screen Keyboard">
+                <svg viewBox="0 0 24 24"><path d="M21 16H3V4h18v12zm1-14H2C.9 2 0 2.9 0 4v12c0 1.1.9 2 2 2h7v2H7v2h8v-2h-2v-2h8c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 13h14v-1.5H5V13zm0-3.5h14V8H5v1.5z"/></svg>
+            </button>
+        </div>
+
+        <div class="editor-container">
+            <div class="page-bg" id="page-wrapper">
+                <div id="paper" contenteditable="true" spellcheck="false" oninput="handleInput()"></div>
+            </div>
+        </div>
+
+        <div id="keyboard-wrapper">
+            <div class="keyboard-layout">
+                <div class="kb-row">
+                    <div class="key" onclick="addCharacter('ܐ')" title="Alap">ܐ</div>
+                    <div class="key" onclick="addCharacter('ܒ')" title="Bet">ܒ</div>
+                    <div class="key" onclick="addCharacter('ܓ')" title="Gamal">ܓ</div>
+                    <div class="key" onclick="addCharacter('ܕ')" title="Dalat">ܕ</div>
+                    <div class="key" onclick="addCharacter('ܗ')" title="Heih">ܗ</div>
+                    <div class="key" onclick="addCharacter('ܘ')" title="Waw">ܘ</div>
+                    <div class="key" onclick="addCharacter('ܙ')" title="Zein">ܙ</div>
+                    <div class="key" onclick="addCharacter('ܚ')" title="Khet">ܚ</div>
+                    <div class="key" onclick="addCharacter('ܛ')" title="Teit">ܛ</div>
+                    <div class="key" onclick="addCharacter('ܝ')" title="Yood">ܝ</div>
+                    <div class="key" onclick="addCharacter('ܟ')" title="Kap">ܟ</div>
+                    <div class="key" onclick="addCharacter('ܠ')" title="Lamad">ܠ</div>
+                    <div class="key" onclick="addCharacter('ܡ')" title="Meem">ܡ</div>
+                    <div class="key" onclick="addCharacter('ܢ')" title="Noon">ܢ</div>
+                    <div class="key" onclick="addCharacter('ܣ')" title="Simkat">ܣ</div>
+                    <div class="key" onclick="addCharacter('ܥ')" title="Ai">ܥ</div>
+                    <div class="key" onclick="addCharacter('ܦ')" title="Peh">ܦ</div>
+                    <div class="key" onclick="addCharacter('ܨ')" title="Sadeh">ܨ</div>
+                    <div class="key" onclick="addCharacter('ܩ')" title="Qop">ܩ</div>
+                    <div class="key" onclick="addCharacter('ܪ')" title="Resh">ܪ</div>
+                    <div class="key" onclick="addCharacter('ܫ')" title="Sheen">ܫ</div>
+                    <div class="key" onclick="addCharacter('ܬ')" title="Taw">ܬ</div>
+                </div>
+
+                <div class="kb-row">
+                    <div class="key" onclick="addCharacter('ܵ')" title="Sqapa">ܵ</div>
+                    <div class="key" onclick="addCharacter('ܲ')" title="Ptakha">ܲ</div>
+                    <div class="key" onclick="addCharacter('ܸ')" title="Zlama psheeqa">ܸ</div>
+                    <div class="key" onclick="addCharacter('ܹ')" title="Zlama qashya">ܹ</div>
+                    <div class="key" onclick="addCharacter('ܼ')" title="Rwasa">ܼ</div>
+                    <div class="key" onclick="addCharacter('ܿ')" title="Rwakha">ܿ</div>
+                    <div class="key" onclick="addCharacter('̮')" title="P - Ph">̮</div>
+                    <div class="key" onclick="addCharacter('̰')" title="G - j Sh - sio">̰</div>
+                    <div class="key" onclick="addCharacter('݂')" title="Soft sound">݂</div>
+                </div>
+
+                <div class="kb-row">
+                    <div class="key wide control" onclick="clearCharacters()">Clear</div>
+                    <div class="key extra-wide" onclick="addCharacter(' ')" title="Space">Space</div>
+                    <div class="key wide control" onclick="removeCharacter()" title="Backspace">⌫</div>
+                    <div class="key wide control" onclick="addCharacter('\n')" title="Enter">↵</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>
